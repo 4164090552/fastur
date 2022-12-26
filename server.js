@@ -7,7 +7,7 @@ require('http').createServer(function (request, response) {
         var data = JSON.parse(require("fs").readFileSync("./data.json", "utf8"));
         var sites = data["homes"];
         var homes = Object.keys(sites);
-        var stripe = require('stripe')("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");
+        var stripe = require('stripe')(LIVE_KEY);
 
         if (request.url == '/config') {
             async function config() {
@@ -15,8 +15,7 @@ require('http').createServer(function (request, response) {
                     lookup_keys: ["fastur", "fastur_enterprise"],
                     expand: ['data.product']
                 });
-                //response.end(JSON.stringify({ publishableKey: "pk_test_51L4EEMDTeMQvrKKyxXvQSbWj5jPhixxbuqgoRbykq835MkyVVLvJ00NTqoih6SrsM2HK5Qb6uaLAjyZRNktPKmBV00avMHtiC4", prices: prices.data }));
-                response.end(JSON.stringify({ publishableKey: "pk_live_51L4EEMDTeMQvrKKyC4SysshTBCxykAnyc1fdrkblCiUd6Evt5JIssZyXeOgpWpXHvow09RSNKUsJ6ci4PfRm1ryM00dATiwjKk", prices: prices.data }));
+                response.end(JSON.stringify({ publishableKey: LIVE_KEY, prices: prices.data }));
             };
             config();
         } else if (request.url == '/invoice-preview') {
@@ -294,7 +293,7 @@ require('http').createServer(function (request, response) {
                 done = 1;
                 async function buy() {
                     var priced = price + "00";
-                    var stripe = require('stripe')('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');
+                    var stripe = require('stripe')(LIVE_KEY);
                     var session = await stripe.checkout.sessions.create({
                         line_items: [{
                             price: buy,
@@ -319,7 +318,7 @@ require('http').createServer(function (request, response) {
             if (stripe == "connect") {
                 done = 1;
                 async function onboard() {
-                    var stripe = require('stripe')('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');
+                    var stripe = require('stripe')(LIVE_KEY);
                     var account = await stripe.accounts.create({
                         type: 'standard',
                         email: email,
@@ -370,7 +369,7 @@ require('http').createServer(function (request, response) {
                 if (status == "paid") {
 
                     async function paid_status() {
-                        var stripe = require('stripe')('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');
+                        var stripe = require('stripe')(LIVE_KEY);
                         var product = await stripe.products.create({
                             name: site
                         });
@@ -488,8 +487,7 @@ require('http').createServer(function (request, response) {
                 body = JSON.parse(body);
             } catch (e) { };
 
-            //var stripe = require('stripe')("sk_test_51L4EEMDTeMQvrKKyllune3l1a0lki1CNYzarolPWE1E7V6XK0HBXWVWnhkppMSdo4TDXXIeDy8O9DIog5W4tnpE600U9tBeOnz");            
-            var stripe = require('stripe')("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");
+            var stripe = require('stripe')(LIVE_KEY);
             
             if (body.type == 'config_send') {
                 async function config_send() {
@@ -688,7 +686,7 @@ require('http').createServer(function (request, response) {
             if (body.type == "subscribe") {
                 console.log(body);
                 async function subscribe() {
-                    var stripe = require('stripe')('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');
+                    var stripe = require('stripe')(LIVE_KEY);
 
                     if (body.creation == "enterprise") {
                         var product = await stripe.products.create({ name: 'Fastur Enterprise' });
